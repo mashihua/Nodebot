@@ -1,0 +1,15 @@
+Node.js Server Capistrano Tasks
+  by Shihua Ma
+  http://f2eskills.com/
+
+
+== DESCRIPTION
+
+Capistrano tasks for setting up and maintaining a Node.js server, such as is installed at NodeMachine. Use as a starting point for your own server automation tasks. 
+
+Notice: The task use upstart for handle starting of tasks and services during boot, stopping them during shutdown and supervising them while the system is running, see http://upstart.ubuntu.com/.
+
+Use at your own risk.
+
+The nodebot:setup task will try to install node, git, npm, node-jake and other software.
+  
