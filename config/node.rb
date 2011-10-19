@@ -89,6 +89,15 @@ namespace :nodebot do
       sudo "apt-get install monit"
       #set variable for monit to start
       sudo 'echo "startup=1" >> /etc/default/monit'
+      #Monit control file config
+      monitrc = <<-MONITRC
+      set daemon 30
+      include /etc/monit/conf.d/*
+
+      set httpd port 6880 and
+        allow admin:#{monit_pwd}
+      MONITRC
+      sudo "echo #{monitrc} >> /etc/monit/monitrc"  
     end
     
     desc "Install httperf"

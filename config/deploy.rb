@@ -90,19 +90,8 @@ check host #{application}_#{node_env} with address 127.0.0.1
     with timeout 10 seconds
     then restart
 MONIT
-
-    #Monit control file config
-    monitrc = <<-MONITRC
-set daemon 30
-set logfile /var/log/monit.log
-include /etc/monit/conf.d/*
-set httpd port 6880 and
-  allow admin:#{monit_pwd}
-MONITRC
-
     put monit_script, "/tmp/#{application}_#{node_env}_monit"
     sudo "mv /tmp/#{application}_#{node_env}_monit /etc/monit/conf.d/#{application}_#{node_env}_monit"
-    sudo "echo #{monitrc} >> /etc/monit/monitrc"  
   end
   
 end
