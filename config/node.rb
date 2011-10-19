@@ -98,7 +98,8 @@ namespace :nodebot do
       set httpd port 6880 and
         allow admin:#{monit_pwd}
       MONITRC
-      sudo "echo #{monitrc} >> /etc/monit/monitrc"  
+      sudo "echo #{monitrc} >> /etc/monit/monitrc"
+      sudo "monit -d 60 -c /etc/monit/monitrc"
     end
     
     desc "Install httperf"
