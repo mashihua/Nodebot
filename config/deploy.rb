@@ -29,17 +29,17 @@ namespace :deploy do
   
   desc "Start node server"
   task :start, :roles => :app, :except => { :no_release => true } do
-    sudo "start #{application}_#{node_env}"
+    sudo "monit start #{application}_#{node_env}"
   end
   
   desc "Stop node server"
   task :stop, :roles => :app, :except => { :no_release => true } do
-    sudo "stop #{application}_#{node_env}"
+    sudo "monit start #{application}_#{node_env}"
   end
   
   desc "Restart node server"
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "sudo restart #{application}_#{node_env} || sudo start #{application}_#{node_env}"
+    sudo "monit restart #{application}_#{node_env} || monit start #{application}_#{node_env}"
   end
 
   desc "Check required packages and install if packages are not installed"
