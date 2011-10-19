@@ -18,6 +18,7 @@ namespace :nodebot do
       npm
       jake
       tree
+      monit
       httperf
       set_time_to_utc
     end
