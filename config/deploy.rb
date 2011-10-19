@@ -83,8 +83,8 @@ UPSTART
     monit_script = <<-MONIT
 #!monit
 check host #{application}_#{node_env} with address 127.0.0.1
-  start program = "start #{application}_#{node_env}"
-  stop program  = "stop #{application}_#{node_env}"
+  start program = "/sbin/start #{application}_#{node_env}"
+  stop program  = "/sbin/stop #{application}_#{node_env}"
   if failed port #{application_port} protocol HTTP
     request /
     with timeout 10 seconds
@@ -97,6 +97,6 @@ MONIT
 end
 
 before 'deploy:setup', 'deploy:create_deploy_to_with_sudo'
-after 'deploy:setup', 'deploy:write_upstart_script'
+after 'deploy:setup', 'deploy:write_upstart_script', "deploy:write_monit_script"
 after "deploy:finalize_update", "deploy:update_submodules", "deploy:check_packages"
 
