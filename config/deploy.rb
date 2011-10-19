@@ -15,7 +15,8 @@ set :host, "hostname"
 #user name,must be a sudoer without prompting for password 
 set :user, "username"
 set :admin_runner, user
-
+#set Monit web interface admin's pwd
+set :monit_pwd, "monit"
 
 set :repository, "git@git@github.com:mashihua/Nodebot.git"
 set :scm, :git
@@ -72,10 +73,38 @@ exec sudo -u #{admin_runner} sh -c "NODE_ENV=#{node_env} /usr/local/bin/node #{c
 end script
 respawn
 UPSTART
-  put upstart_script, "/tmp/#{application}_upstart.conf"
-    sudo "mv /tmp/#{application}_upstart.conf /etc/init/#{application}_#{node_env}.conf"
+    put upstart_script, "/tmp/#{application}_upstart.conf"
+      sudo "mv /tmp/#{application}_upstart.conf /etc/init/#{application}_#{node_env}.conf"
+    end
   end
+  
+  task :write_monit_script, :roles => :app do
+    #Monit script for application 
+    monit_script = <<-MONIT
+#!monit
+check host #{application}_#{node_env} with address 127.0.0.1
+  start program = "start #{application}_#{node_env}"
+  stop program  = "stop #{application}_#{node_env}"
+  if failed port #{application_port} protocol HTTP
+    request /
+    with timeout 10 seconds
+    then restart
+MONIT
 
+    #Monit control file config
+    monitrc = <<-MONITRC
+set daemon 30
+set logfile /var/log/monit.log
+include /etc/monit/conf.d/*
+set httpd port 6880 and
+  allow admin:#{monit_pwd}
+MONITRC
+
+    put monit_script, "/tmp/#{application}_#{node_env}_monit"
+    sudo "mv /tmp/#{application}_#{node_env}_monit /etc/monit/conf.d/#{application}_#{node_env}_monit"
+    sudo "echo #{monitrc} >> /etc/monit/monitrc"  
+  end
+  
 end
 
 before 'deploy:setup', 'deploy:create_deploy_to_with_sudo'

@@ -84,6 +84,13 @@ namespace :nodebot do
       run cmd
     end
     
+    desc "Install monit"
+    task :monit do
+      sudo "apt-get install monit"
+      #set variable for monit to start
+      sudo 'echo "startup=1" >> /etc/default/monit'
+    end
+    
     desc "Install httperf"
     task :httperf do
       cmd = [
