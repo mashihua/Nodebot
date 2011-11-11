@@ -44,7 +44,7 @@ namespace :deploy do
 
   desc "Check required packages and install if packages are not installed"
   task :check_packages, roles => :app do
-    run "cd #{release_path} && jake depends"
+    run "cd #{release_path} && env NODE_PATH=`npm config get prefix`/lib/node_modules jake depends"
   end
 
   task :create_deploy_to_with_sudo, :roles => :app do
