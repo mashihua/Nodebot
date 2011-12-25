@@ -24,6 +24,13 @@ set :deploy_via, :remote_cache
 role :app, host
 set :use_sudo, true
 
+# simply run a fetch from server
+set :deploy_via, :remote_cache
+set :git_shallow_clone, 1
+#for git submodules
+set :git_enable_submodules, 1
+#set  the last 5 releases are kept on
+after "deploy", "deploy:cleanup"
 
 namespace :deploy do
   
